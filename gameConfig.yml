@@ -1,0 +1,8 @@
+---
+particle_use: true
+chat_send: false
+chat_receive: false
+command_use: false
+command_canUse:
+- /say
+...

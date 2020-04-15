@@ -1,0 +1,16 @@
+---
+#一下判断类型都是true是/可以，false否/不可以
+#游戏是否加入粒子特效
+particle_use: true
+#加入游戏玩家发送的信息是否让其他非游戏中玩家接收
+chat_send: false
+#加入游戏玩家是否接收非游戏玩家发送的信息
+chat_receive: false
+#加入游戏的玩家是否无法输入指令
+command_use: false
+#在游戏无法使用指令的情况下可以输出的指令列表
+#格式
+#- /xx
+command_canUse: 
+- /say
+...
