@@ -14,17 +14,16 @@ use net\mcpes\summit\yui\SHotPotato;
 use pocketmine\item\Item;
 use pocketmine\item\LeatherTunic;
 use pocketmine\math\Vector3;
-use pocketmine\scheduler\PluginTask;
+use pocketmine\scheduler\Task;
 use pocketmine\utils\Color;
 
-class PropResetTask extends PluginTask
+class PropResetTask extends Task
 {
     private $state;
     private $refresh;
     private $props = array();
 
-    public function __construct(GameState $state,SHotPotato $owner){
-        parent::__construct($owner);
+    public function __construct(GameState $state){
         $this->state = $state;
         $this->refresh = SHotPotato::getApi()->getRoom($state->getRoomName())->getPropResetTime();
     }

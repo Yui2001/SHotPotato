@@ -26,14 +26,14 @@
 namespace net\mcpes\summit\yui\task;
 
 use pocketmine\plugin\Plugin;
-use pocketmine\scheduler\PluginTask;
+use pocketmine\scheduler\Task;
 
 /**
  * Allows the creation of simple callbacks with extra data
  * The last parameter in the callback will be this object
  *
  */
-class PluginCallbackTask extends PluginTask{
+class PluginCallbackTask extends Task {
     /** @var callable */
     protected $callable;
     /** @var array */
@@ -43,8 +43,7 @@ class PluginCallbackTask extends PluginTask{
      * @param callable $callable
      * @param array    $args
      */
-    public function __construct(Plugin $owner, callable $callable, array $args = []){
-        parent::__construct($owner);
+    public function __construct(callable $callable, array $args = []){
         $this->callable = $callable;
         $this->args = $args;
         $this->args[] = $this;

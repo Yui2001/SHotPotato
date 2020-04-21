@@ -27,8 +27,6 @@ use pocketmine\event\player\PlayerItemHeldEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\player\PlayerDropItemEvent;
-use pocketmine\event\player\PlayerHungerChangeEvent;
-use pocketmine\event\player\PlayerTextPreSendEvent;
 use pocketmine\item\Item;
 use pocketmine\level\particle\DestroyBlockParticle;
 use pocketmine\level\particle\EnchantmentTableParticle;
@@ -104,11 +102,11 @@ class PlayerListen implements Listener
                         }
                         break;
                     case 299://绿衣服 防御
-                        if($player->getInventory()->getChestplate()->getId() == 299){
+                        if($player->getArmorInventory()->getChestplate()->getId() == 299){
                             $player->sendMessage(SHotPotato::$DEFAULT_TITLE."你已经穿上防御衣了");
                             return;
                         }
-                        $player->getInventory()->setChestplate($item);
+                        $player->getArmorInventory()->setChestplate($item);
                         $player->getInventory()->removeItem(Item::get(299, 0, 1));
                         break;
                 }
@@ -126,13 +124,13 @@ class PlayerListen implements Listener
         }
     }
 
-    public function onHungerChange(PlayerHungerChangeEvent $event)
+/*    public function onHungerChange(PlayerHungerChangeEvent $event)
     {
         if($this->dataManager->isInGame($event->getPlayer()->getName()))
         {
             $event->setCancelled();
         }
-    }
+    }*/
 
     public function onBlockBreak(BlockBreakEvent $event)
     {
@@ -192,8 +190,8 @@ class PlayerListen implements Listener
                                         //Server::getInstance()->getLogger()->info("sb2");
                                         if ($damageManager->isAlive()) {
                                             $v3 = new Vector3($entity->getFloorX(), $entity->getFloorY() + 1, $entity->getFloorZ());
-                                            if($entity->getInventory()->getChestplate()->getId() == 299){
-                                                $entity->getInventory()->setChestplate(Item::get(0));
+                                            if($entity->getArmorInventory()->getChestplate()->getId() == 299){
+                                                $entity->getArmorInventory()->setChestplate(Item::get(0));
                                                 $damager->sendMessage(SHotPotato::$DEFAULT_TITLE . $entity->getName(). "§4穿上了防身衣，挡住了你的山芋攻击" );
                                                 $entity->sendMessage(SHotPotato::$DEFAULT_TITLE ."你身上的防身衣替你挡了一命");
                                                 $particle = new SpellParticle($v3, 0,255,0);
@@ -350,7 +348,7 @@ class PlayerListen implements Listener
         }
     }
 
-    public function onSend(PlayerTextPreSendEvent $event)
+  /*  public function onSend(PlayerTextPreSendEvent $event)
     {
         $player = $event->getPlayer();
         if($this->dataManager->isInGame($player->getName())) {
@@ -361,5 +359,5 @@ class PlayerListen implements Listener
                 }
             }
         }
-    }
+    }*/
 }

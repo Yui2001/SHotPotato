@@ -1,5 +1,4 @@
 name: SHotPotato
-api: [1.0.0,2.0.0,3.0.0]
 version: 1.1.6
 main: net\mcpes\summit\yui\SHotPotato
 author: Yui
@@ -7,11 +6,6 @@ author: Yui
 commands:
  hotpotato:
   description: "烫手的山芋总指令"
-
-
-# softdepend必须加到你的 plugin.yml 中
-softdepend:
- - "ZXDAKernel"
 
 api:
  - 1.0.0

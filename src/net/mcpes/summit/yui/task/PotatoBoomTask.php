@@ -12,16 +12,15 @@ namespace net\mcpes\summit\yui\task;
 use net\mcpes\summit\yui\gameFunction\GameState;
 use net\mcpes\summit\yui\SHotPotato;
 use pocketmine\level\sound\TNTPrimeSound;
-use pocketmine\scheduler\PluginTask;
+use pocketmine\scheduler\Task;
 
-class PotatoBoomTask extends PluginTask
+class PotatoBoomTask extends Task
 {
 
     private $state;
     private static $boom;
 
-    public function __construct(GameState $state,SHotPotato $owner){
-        parent::__construct($owner);
+    public function __construct(GameState $state){
         $this->state = $state;
         self::$boom = $this->getBoomTime();
     }

@@ -11,16 +11,15 @@ namespace net\mcpes\summit\yui\task;
 
 use net\mcpes\summit\yui\gameFunction\GameState;
 use net\mcpes\summit\yui\SHotPotato;
-use pocketmine\scheduler\PluginTask;
+use pocketmine\scheduler\Task;
 use pocketmine\Server;
 
-class StopTask extends PluginTask
+class StopTask extends Task
 {
     private $state;
     private $stop;
 
-    public function __construct(GameState $state,SHotPotato $owner){
-        parent::__construct($owner);
+    public function __construct(GameState $state){
         $this->state = $state;
         $this->stop = SHotPotato::getApi()->getRoom($state->getRoomName())->getStopTime();
     }

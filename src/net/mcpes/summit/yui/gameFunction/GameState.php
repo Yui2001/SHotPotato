@@ -87,7 +87,7 @@ class GameState
         $player->getInventory()->setItem(8,Item::get(324)->setCustomName("§l§e双击离开游戏房间"));
         $this->updataSign();
         $this->addFloatingText($player);
-        $player->sendActionBar(SHotPotato::$DEFAULT_TITLE,"§e欢迎加入游戏", 20, 30, 20);
+        $player->addTitle(SHotPotato::$DEFAULT_TITLE,"§e欢迎加入游戏", 20, 30, 20);
         $this->sendMessageToAll(SHotPotato::$DEFAULT_TITLE."玩家".$playerName."加入了游戏");
         $this->sendMessageToAll(SHotPotato::$DEFAULT_TITLE."§6游戏当前人数:".$this->roomData->getPlayersCount());
         if($this->roomData->getPlayersCount() == $this->roomBase->getMinPlayer()) {
@@ -96,7 +96,7 @@ class GameState
                     $this->roomData->setMode(1);
                     $this->updataSign();
                     $this->sendMessageToAll(SHotPotato::$DEFAULT_TITLE . "§6已经达到标准人数啦！游戏即将开始");
-                    Server::getInstance()->getScheduler()->scheduleRepeatingTask(new WaitTask($this, SHotPotato::getInstance()), 20);
+                    SHotPotato::getInstance()->getScheduler()->scheduleRepeatingTask(new WaitTask($this), 20);
                     return;
                 }else{
                     $this->sendMessageToAll(SHotPotato::$DEFAULT_TITLE . "§4游戏世界未加载，请联系服主");
@@ -116,7 +116,7 @@ class GameState
             $this->roomData->removeAlivePlayer($playerName);
             $player->teleport($this->roomBase->getLookLevel()->getSafeSpawn());
             $player->teleport($this->roomBase->getLookPlace());
-            $player->sendActionBar(SHotPotato::$DEFAULT_TITLE, "§e你已进入观战模式", 20, 30, 20);
+            $player->addTitle(SHotPotato::$DEFAULT_TITLE, "§e你已进入观战模式", 20, 30, 20);
             $this->sendMessageToAll(SHotPotato::$DEFAULT_TITLE . "玩家" . $playerName . "死亡");
             $this->sendMessageToAll(SHotPotato::$DEFAULT_TITLE . "游戏剩余玩家：" . $this->roomData->getAlivePlayersCount() . "人");
         }
@@ -180,9 +180,9 @@ class GameState
             $player->teleport($this->roomBase->getGamePlace());
         }
         $this->sendMessageToAll("§6游戏开始咯!");
-        Server::getInstance()->getScheduler()->scheduleRepeatingTask(new PropResetTask($this,SHotPotato::getInstance()),20);
-        Server::getInstance()->getScheduler()->scheduleRepeatingTask(new PotatoBoomTask($this,SHotPotato::getInstance()),20);
-        Server::getInstance()->getScheduler()->scheduleRepeatingTask(new StopTask($this,SHotPotato::getInstance()),20);
+        SHotPotato::getInstance()->getScheduler()->scheduleRepeatingTask(new PropResetTask($this),20);
+        SHotPotato::getInstance()->getScheduler()->scheduleRepeatingTask(new PotatoBoomTask($this),20);
+        SHotPotato::getInstance()->getScheduler()->scheduleRepeatingTask(new StopTask($this),20);
     }
 
     public function suspendGame()
@@ -254,7 +254,7 @@ class GameState
         }
         foreach ($players as $playerName){
             $player = Server::getInstance()->getPlayerExact($playerName);
-            $player->sendActionBar($title, $subtitle, $fadeIn, $stay, $fadeOut);
+            $player->addTitle($title, $subtitle, $fadeIn, $stay, $fadeOut);
         }
     }
 
@@ -328,7 +328,7 @@ class GameState
         §6山芋玩家一定在规定时间内必须点击其他玩家，将山芋丢出\n
         §d时间过后手持山芋的玩家将会BOOM\n
         §f当然普通玩家也必须要避开山芋玩家哦！";
-        $particle = new FloatingTextParticle($v3,null,$text);
+        $particle = new FloatingTextParticle($v3,"",$text);
         $player->getLevel()->addParticle($particle,array($player));
     }
 

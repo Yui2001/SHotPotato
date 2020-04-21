@@ -12,7 +12,7 @@ namespace net\mcpes\summit\yui\gameManager;
 use net\mcpes\summit\yui\SHotPotato;
 use pocketmine\item\Item;
 use pocketmine\item\LeatherCap;
-use pocketmine\network\protocol\MobArmorEquipmentPacket;
+use pocketmine\network\mcpe\protocol\MobArmorEquipmentPacket;
 use pocketmine\Player;
 use pocketmine\utils\Color;
 
@@ -34,7 +34,7 @@ class PlayerManager
     public function setPotato()
     {
         $helmet = Item::get(298);
-        $item = $this->player->getItemInHand();
+        $item = $this->player->getInventory()->getItemInHand();
         $this->player->getInventory()->setItemInHand(Item::get(393));
         if($item->getId() != 0){
             $this->player->getInventory()->addItem($item);
@@ -72,13 +72,13 @@ class PlayerManager
 
     public function saveItems(){
         $this->items = $this->player->getInventory()->getContents();
-        $this->equipment = $this->player->getInventory()->getArmorContents();
+        $this->equipment = $this->player->getArmorInventory()->getContents();
     }
 
     public function giveItems()
     {
         $this->player->getInventory()->setContents($this->items);
-        $this->player->getInventory()->setArmorContents($this->equipment);
+        $this->player->getArmorInventory()->setContents($this->equipment);
     }
 
     public function getPlayer():Player
@@ -109,13 +109,11 @@ class PlayerManager
     public function setHelmet(Player $player,Item $item)
     {
         $pk = new MobArmorEquipmentPacket();
-        $pk->eid = $player->getId();
-        $pk->slots = [
-            $item,
-            Item::get(0,0),
-            Item::get(0,0),
-            Item::get(0,0)
-        ];
+        $pk->entityRuntimeId = $player->getId();
+        $pk->head = $item;
+        $pk->feet = Item::get(0);
+        $pk->chest = Item::get(0);
+        $pk->legs = Item::get(0);
         $pk->encode();
         foreach($player->getLevel()->getPlayers() as $players){
             $players->dataPacket($pk);
