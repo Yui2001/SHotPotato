@@ -32,10 +32,10 @@ use pocketmine\level\particle\DestroyBlockParticle;
 use pocketmine\level\particle\EnchantmentTableParticle;
 use pocketmine\level\particle\HappyVillagerParticle;
 use pocketmine\level\particle\LavaDripParticle;
-use pocketmine\level\particle\SpellParticle;
 use pocketmine\level\particle\WaterDripParticle;
 use pocketmine\level\sound\AnvilUseSound;
 use pocketmine\math\Vector3;
+use pocketmine\network\mcpe\protocol\ActorEventPacket;
 use pocketmine\Player;
 use pocketmine\Server;
 
@@ -62,9 +62,7 @@ class PlayerListen implements Listener
                 if ($playerManager->getGame()->hasPotatoPlayer()) {
                     if ($playerManager->isPotatoPlayer()) {
                         if ($this->configBase->useParticle()) {
-                            $v3 = new Vector3($player->getX(), $player->getY() + 2, $player->getZ());
-                            $particle = new SpellParticle($v3, 0, 1, 0);
-                            $player->getLevel()->addParticle($particle);
+                            $player->broadcastEntityEvent(ActorEventPacket::FIREWORK_PARTICLES);
                         }
                     }
                 }

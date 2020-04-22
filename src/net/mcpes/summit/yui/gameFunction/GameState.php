@@ -23,9 +23,8 @@ use pocketmine\level\particle\FloatingTextParticle;
 use pocketmine\level\particle\HugeExplodeParticle;
 use pocketmine\level\particle\HugeExplodeSeedParticle;
 use pocketmine\level\sound\AnvilUseSound;
-use pocketmine\level\sound\ButtonClickSound;
-use pocketmine\level\sound\ExplodeSound;
 use pocketmine\math\Vector3;
+use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\tile\Sign;
@@ -216,7 +215,7 @@ class GameState
         $player->getLevel()->addParticle(new ExplodeParticle($location));
         $player->getLevel()->addParticle(new HugeExplodeParticle($location));
         $player->getLevel()->addParticle(new HugeExplodeSeedParticle($location));
-        $player->getLevel()->addSound(new ExplodeSound($location));
+        $player->getLevel()->broadcastLevelSoundEvent($location,LevelSoundEventPacket::SOUND_EXPLODE);
         $this->onDeath($player->getName());
         $player->getInventory()->clearAll();
         $item = Item::get(324);
@@ -236,7 +235,7 @@ class GameState
             $player = Server::getInstance()->getPlayerExact($playerName);
             switch ($type){
                 case 1:
-                    $player->getLevel()->addSound(new ButtonClickSound($player->getLocation()),array($player));
+                    $player->getLevel()->broadcastLevelSoundEvent($player->getLocation(),3500);
                     break;
                 case 2:
                     $player->getLevel()->addSound(new AnvilUseSound($player->getLocation()),array($player));

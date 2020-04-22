@@ -8,12 +8,13 @@
 
 namespace net\mcpes\summit\yui;
 
+use net\mcpes\summit\yui\entity\Lightning;
 use net\mcpes\summit\yui\gameConfig\ConfigBase;
 use net\mcpes\summit\yui\listen\PlayerListen;
 use net\mcpes\summit\yui\listen\SignListen;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\entity\Lightning;
+use pocketmine\entity\Entity;
 use pocketmine\level\sound\EndermanTeleportSound;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\DoubleTag;
@@ -89,6 +90,7 @@ class SHotPotato extends PluginBase
         self::$configBase = new ConfigBase();
         self::$dataManager = new DataManager();
         self::$dataFolder = $this->getDataFolder();
+        Entity::registerEntity(Lightning::class);
         $this->getServer()->getLogger()->info(self::$DEFAULT_TITLE . "§6成功加载！");
     }
 
