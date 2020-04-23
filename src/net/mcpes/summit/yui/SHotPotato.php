@@ -92,7 +92,6 @@ class SHotPotato extends PluginBase
         self::$dataManager = new DataManager();
         self::$dataFolder = $this->getDataFolder();
         Entity::registerEntity(Lightning::class);
-        Entity::registerEntity(FireWork::class);
         $this->getServer()->getLogger()->info(self::$DEFAULT_TITLE . "§6成功加载！");
     }
 
