@@ -12,6 +12,7 @@ use net\mcpes\summit\yui\SHotPotato;
 use net\mcpes\summit\yui\task\PotatoBoomTask;
 use pocketmine\block\Block;
 use pocketmine\entity\Effect;
+use pocketmine\entity\EffectInstance;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityLevelChangeEvent;
@@ -70,19 +71,21 @@ class PlayerListen implements Listener
                 switch ($item->getId()) {
                     case 264://钻石 加速
                         $effect = Effect::getEffect(1);
-                        $effect->setDuration(60);
-                        $effect->setAmplifier(1);
-                        $player->addEffect($effect);
+                        $instance = new EffectInstance($effect);
+                        $instance->setDuration(60);
+                        $instance->setAmplifier(1);
+                        $player->addEffect($instance);
                         $player->sendMessage(SHotPotato::$DEFAULT_TITLE . "成功使用加速道具！");
                         $player->getInventory()->removeItem(Item::get(264, 0, 1));
                         break;
                     case 388://绿宝石 隐形
                         $effect = Effect::getEffect(14);
-                        $effect->setDuration(20);
-                        $effect->setAmplifier(1);
-                        $effect->setAmbient(false);
-                        $effect->setVisible(false);
-                        $player->addEffect($effect);
+                        $instance = new EffectInstance($effect);
+                        $instance->setDuration(20);
+                        $instance->setAmplifier(1);
+                        $instance->setAmbient(false);
+                        $instance->setVisible(false);
+                        $player->addEffect($instance);
                         $player->sendMessage(SHotPotato::$DEFAULT_TITLE . "成功使用隐形道具！");
                         $player->getInventory()->removeItem(Item::get(388, 0, 1));
                         break;
@@ -192,18 +195,13 @@ class PlayerListen implements Listener
                                                 $entity->getArmorInventory()->setChestplate(Item::get(0));
                                                 $damager->sendMessage(SHotPotato::$DEFAULT_TITLE . $entity->getName(). "§4穿上了防身衣，挡住了你的山芋攻击" );
                                                 $entity->sendMessage(SHotPotato::$DEFAULT_TITLE ."你身上的防身衣替你挡了一命");
-                                                $particle = new SpellParticle($v3, 0,255,0);
-                                                $entity->getLevel()->addParticle($particle);
                                                 $entity->getLevel()->addSound(new AnvilUseSound($v3));
                                                 return;
                                             }
                                             //Server::getInstance()->getLogger()->info("sb1");
                                             $damageManager->setPotato();
+                                            $entity->broadcastEntityEvent(ActorEventPacket::FIREWORK_PARTICLES);
                                             $entity->getLevel()->addParticle(new DestroyBlockParticle($v3, Block::get(152)));
-                                            if (SHotPotato::getConfigBase()->useParticle()) {
-                                                $particle = new SpellParticle($v3, 248, 36, 35);
-                                                $entity->getLevel()->addParticle($particle);
-                                            }
                                             $damager->sendMessage(SHotPotato::$DEFAULT_TITLE . "§6你把烫手的山芋丢给了§4" . $entity->getName());
                                             $entity->sendMessage(SHotPotato::$DEFAULT_TITLE . $damager->getName() . "§6把烫手的山芋丢给了你");
                                             $this->api->getGameState($this->dataManager->getPlayerRoomName($entity->getName()))->sendMessageToAll(SHotPotato::$DEFAULT_TITLE . "§6烫手的山芋落在了玩家§4" . $entity->getName() . "§e的手上");

@@ -12,6 +12,7 @@ namespace net\mcpes\summit\yui\task;
 use net\mcpes\summit\yui\gameFunction\GameState;
 use net\mcpes\summit\yui\SHotPotato;
 use pocketmine\level\sound\TNTPrimeSound;
+use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\scheduler\Task;
 
 class PotatoBoomTask extends Task
@@ -39,7 +40,7 @@ class PotatoBoomTask extends Task
         if(self::$boom == 1){
             if($this->state->getRoomData()->hasPotatoPlayer()) {
                 $potato = $this->state->getRoomData()->getPotatoPlayer();
-                $potato->getLevel()->addSound(new TNTPrimeSound($potato->getLocation()));
+                $potato->getLevel()->broadcastLevelSoundEvent($potato->getLocation(),LevelSoundEventPacket::SOUND_EXPLODE);
             }
         }
         if(self::$boom <= 5){

@@ -235,7 +235,7 @@ class GameState
             $player = Server::getInstance()->getPlayerExact($playerName);
             switch ($type){
                 case 1:
-                    $player->getLevel()->broadcastLevelSoundEvent($player->getLocation(),3500);
+                    $player->getLevel()->broadcastLevelSoundEvent($player->getLocation(),LevelSoundEventPacket::SOUND_RANDOM_ANVIL_USE);
                     break;
                 case 2:
                     $player->getLevel()->addSound(new AnvilUseSound($player->getLocation()),array($player));

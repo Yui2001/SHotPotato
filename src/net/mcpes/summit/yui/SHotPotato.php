@@ -187,6 +187,7 @@ class SHotPotato extends PluginBase
         $playerName = $sender->getName();
         switch ($args[0]) {
             case "加入":
+            case "join":
                 if (!isset($args[1])) {
                     $sender->sendMessage(self::$DEFAULT_TITLE . "§6请填写房间名称");
                     return false;
@@ -198,6 +199,7 @@ class SHotPotato extends PluginBase
                 }
                 break;
             case "退出":
+            case "exit":
                 if (!isset($args[1])) {
                     $sender->sendMessage(self::$DEFAULT_TITLE . "§6请填写房间名称");
                     return false;
@@ -211,6 +213,7 @@ class SHotPotato extends PluginBase
                 }
                 break;
             case "新建":
+            case "setup":
                 if (!$sender->isOp()) {
                     $sender->sendMessage(self::$DEFAULT_TITLE . "§6你不是op");
                     return false;
@@ -223,13 +226,6 @@ class SHotPotato extends PluginBase
                 if (!self::getDataManager()->hasRoomBase($roomName)) {
                     self::getApi()->getNewRoom($roomName)->addNewRoom();
                     self::getApi()->getNewRoomData($roomName)->add();
-                    /*if(self::getDataManager()->hasRoomBase($roomName))
-                    {
-                        $sender->sendMessage(self::$DEFAULT_TITLE."§6sb");
-                    }else
-                        {
-                        $sender->sendMessage(self::$DEFAULT_TITLE."§6sb2");
-                    }*/
                 } else {
                     $sender->sendMessage(self::$DEFAULT_TITLE . "§6已有此房间");
                     return false;
@@ -242,6 +238,7 @@ class SHotPotato extends PluginBase
                 print_r(self::getDataManager()->getGamePlayers());
                 break;*/
             case "设置":
+            case "set":
                 if (!$sender->isOp()) {
                     $sender->sendMessage(self::$DEFAULT_TITLE . "§6你不是op");
                     return false;
@@ -260,30 +257,36 @@ class SHotPotato extends PluginBase
                 }
                 switch ($args[2]) {
                     case "等待地点":
+                    case "waitPos":
                         $room->setWaitPlace($location);
                         $sender->sendMessage(self::$DEFAULT_TITLE . "§6成功设置等待地点");
                         $sender->sendMessage(self::$DEFAULT_TITLE . "§6接下来请设置游戏地点");
                         break;
                     case "游戏地点":
+                    case "gamePos":
                         $room->setGamePlace($location);
                         $sender->sendMessage(self::$DEFAULT_TITLE . "§6成功设置游戏地点");
                         $sender->sendMessage(self::$DEFAULT_TITLE . "§6接下来请设置观战地点");
                         break;
                     case "观战地点":
+                    case "watchPos":
                         $room->setLookPlace($location);
                         $sender->sendMessage(self::$DEFAULT_TITLE . "§6成功设置观战地点");
                         $sender->sendMessage(self::$DEFAULT_TITLE . "§6接下来请设置退出地点");
                         break;
                     case "退出地点":
+                    case "exitPos":
                         $room->setOverPlace($location);
                         $sender->sendMessage(self::$DEFAULT_TITLE . "§6成功设置退出地点");
                         $sender->sendMessage(self::$DEFAULT_TITLE . "§6接下来请保存游戏信息");
                         break;
                     case "保存":
+                    case "save":
                         $room->saveAll();
                         $sender->sendMessage(self::$DEFAULT_TITLE . "§6保存游戏房间" . $roomName . "的信息,还有一些基础信息需要在配置文件中修改");
                         break;
                     case "道具":
+                    case "tool":
                         if (!isset($args[3])) {
                             return false;
                         }
