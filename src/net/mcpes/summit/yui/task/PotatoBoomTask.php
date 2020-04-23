@@ -32,15 +32,10 @@ class PotatoBoomTask extends Task
             $this->getHandler()->cancel();
         }
         self::$boom--;
-        if(!$this->state->getRoomData()->hasPotatoPlayer()) {
-            $this->state->sendTipToAll(SHotPotato::$DEFAULT_TITLE."§6烫手的山芋还有".self::$boom."秒随机发放到一人手上");
-        }else{
-            $this->state->sendTipToAll(SHotPotato::$DEFAULT_TITLE."§4烫手的山芋§6还有 ".self::$boom." 秒BOOM");
-        }
         if(self::$boom == 1){
             if($this->state->getRoomData()->hasPotatoPlayer()) {
                 $potato = $this->state->getRoomData()->getPotatoPlayer();
-                $potato->getLevel()->broadcastLevelSoundEvent($potato->getLocation(),LevelSoundEventPacket::SOUND_EXPLODE);
+                $potato->getLevel()->broadcastLevelSoundEvent($potato->getLocation(),LevelSoundEventPacket::SOUND_RANDOM_ANVIL_USE);
             }
         }
         if(self::$boom <= 5){
@@ -59,6 +54,11 @@ class PotatoBoomTask extends Task
             }
             $this->state->randomPotatoPlayer();
             self::$boom = $this->getBoomTime();
+        }
+        if(!$this->state->getRoomData()->hasPotatoPlayer()) {
+            $this->state->sendTipToAll(SHotPotato::$DEFAULT_TITLE."§6烫手的山芋还有".self::$boom."秒随机发放到一人手上");
+        }else{
+            $this->state->sendTipToAll(SHotPotato::$DEFAULT_TITLE."§4烫手的山芋§6还有 ".self::$boom." 秒BOOM");
         }
     }
 

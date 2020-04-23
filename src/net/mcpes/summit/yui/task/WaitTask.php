@@ -62,15 +62,11 @@ class WaitTask extends Task
                 break;
             case 0:
                 $this->state->sendTitleToAll(SHotPotato::$DEFAULT_TITLE,"§l§e游戏开始，Go！",0, 20, 0);
-                $this->state->addSoundToAll(2);
+                if($this->state->getRoomData()->isStop()) {
+                    $this->state->gameStart();
+                    $this->getHandler()->cancel();
+                }
                 break;
-        }
-        if ($this->wait == 0) {
-            if($this->state->getRoomData()->isStop()) {
-                $this->state->gameStart();
-                $this->getHandler()->cancel();
-            }
-            return;
         }
         $this->wait--;
     }

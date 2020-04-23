@@ -8,6 +8,7 @@
 
 namespace net\mcpes\summit\yui\listen;
 
+use net\mcpes\summit\yui\particle\Firework;
 use net\mcpes\summit\yui\SHotPotato;
 use net\mcpes\summit\yui\task\PotatoBoomTask;
 use pocketmine\block\Block;
@@ -29,6 +30,7 @@ use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\player\PlayerDropItemEvent;
 use pocketmine\item\Item;
+use pocketmine\level\Location;
 use pocketmine\level\particle\DestroyBlockParticle;
 use pocketmine\level\particle\EnchantmentTableParticle;
 use pocketmine\level\particle\HappyVillagerParticle;
@@ -63,7 +65,7 @@ class PlayerListen implements Listener
                 if ($playerManager->getGame()->hasPotatoPlayer()) {
                     if ($playerManager->isPotatoPlayer()) {
                         if ($this->configBase->useParticle()) {
-                            $player->broadcastEntityEvent(ActorEventPacket::FIREWORK_PARTICLES);
+                            //$player->getLevel()->addParticle(new Firework($player->getLocation()));
                         }
                     }
                 }
@@ -329,6 +331,13 @@ class PlayerListen implements Listener
                 return;
             }
             $location = $player->getLocation();
+            /*$firework = new \net\mcpes\summit\yui\entity\FireWork($location->getLevel(),SHotPotato::getNBT($player));
+            $firework->setPosition($player->getPosition());
+            $firework->spawnToAll();
+            $a = new ActorEventPacket();
+            $a->event = ActorEventPacket::FIREWORK_PARTICLES;
+            $a->entityRuntimeId = $firework->getId();
+            $player->dataPacket($a);*/
             $roomData = $this->api->getRoomData($this->dataManager->getPlayerRoomName($player->getName()));
             if (SHotPotato::getConfigBase()->useParticle()) {
                 if ($roomData->hasPotatoPlayer()) {

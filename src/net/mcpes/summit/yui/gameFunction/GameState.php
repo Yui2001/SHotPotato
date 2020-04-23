@@ -23,6 +23,7 @@ use pocketmine\level\particle\FloatingTextParticle;
 use pocketmine\level\particle\HugeExplodeParticle;
 use pocketmine\level\particle\HugeExplodeSeedParticle;
 use pocketmine\level\sound\AnvilUseSound;
+use pocketmine\level\sound\ClickSound;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\Player;
@@ -84,7 +85,7 @@ class GameState
         $playerManager->saveItems();
         $player->getInventory()->clearAll();
         $player->getInventory()->setItem(8,Item::get(324)->setCustomName("§l§e双击离开游戏房间"));
-        $this->updataSign();
+        $this->updateSign();
         $this->addFloatingText($player);
         $player->addTitle(SHotPotato::$DEFAULT_TITLE,"§e欢迎加入游戏", 20, 30, 20);
         $this->sendMessageToAll(SHotPotato::$DEFAULT_TITLE."玩家".$playerName."加入了游戏");
@@ -93,7 +94,7 @@ class GameState
             if ($this->roomData->getMode() !== 1) {
                 if($this->roomBase->getGameLevel() !== null) {
                     $this->roomData->setMode(1);
-                    $this->updataSign();
+                    $this->updateSign();
                     $this->sendMessageToAll(SHotPotato::$DEFAULT_TITLE . "§6已经达到标准人数啦！游戏即将开始");
                     SHotPotato::getInstance()->getScheduler()->scheduleRepeatingTask(new WaitTask($this), 20);
                     return;
@@ -104,7 +105,7 @@ class GameState
         }
         if($this->roomData->getPlayersCount() >= $this->roomBase->getMaxPlayer()){
             $this->roomData->setMode(2);
-            $this->updataSign();
+            $this->updateSign();
         }
     }
 
@@ -132,15 +133,17 @@ class GameState
         $player->teleport($this->roomBase->getOverPlace());
         $this->roomData->removePlayer($playerName);
         if($this->getRoomData()->isStart()) {
-            if ($playerManager->isPotatoPlayer()) {
-                $this->randomPotatoPlayer();
-                PotatoBoomTask::setBoomTimeNow($this->getRoomBase()->getPotatoBoomTime());
+            if ($playerManager->getGame()->hasPotatoPlayer()) {
+                if ($playerManager->isPotatoPlayer()) {
+                    $this->randomPotatoPlayer();
+                    PotatoBoomTask::setBoomTimeNow($this->getRoomBase()->getPotatoBoomTime());
+                }
             }
         }
         $this->dataManager->removeGamePlayer($playerName);
         $player->getInventory()->clearAll();
         $playerManager->giveItems();
-        $this->updataSign();
+        $this->updateSign();
         $this->sendMessageToAll(SHotPotato::$DEFAULT_TITLE."玩家".$playerName."退出了游戏");
         if($this->roomData->getMode() == 2){
             if($this->roomData->getPlayersCount() == 0){
@@ -162,14 +165,14 @@ class GameState
     public function resetGame()
     {
         $this->roomData->reset();
-        $this->updataSign();
+        $this->updateSign();
     }
 
     public function gameStart()
     {
         $this->roomData->setMode(2);
         $this->roomData->setStart();
-        $this->updataSign();
+        $this->updateSign();
         $players = array_keys($this->roomData->getPlayers());
         foreach ($players as $playerName)
         {
@@ -178,6 +181,7 @@ class GameState
             $player->teleport($this->roomBase->getGameLevel()->getSafeSpawn());
             $player->teleport($this->roomBase->getGamePlace());
         }
+        $this->addSoundToAll(2);
         $this->sendMessageToAll("§6游戏开始咯!");
         SHotPotato::getInstance()->getScheduler()->scheduleRepeatingTask(new PropResetTask($this),20);
         SHotPotato::getInstance()->getScheduler()->scheduleRepeatingTask(new PotatoBoomTask($this),20);
@@ -196,7 +200,7 @@ class GameState
             $player->getInventory()->setItem(8,$item->setCustomName("§l§e双击离开游戏房间"));
         }
         $this->roomData->setMode(0);
-        $this->updataSign();
+        $this->updateSign();
     }
 
     public function gameStop()
@@ -235,7 +239,7 @@ class GameState
             $player = Server::getInstance()->getPlayerExact($playerName);
             switch ($type){
                 case 1:
-                    $player->getLevel()->broadcastLevelSoundEvent($player->getLocation(),LevelSoundEventPacket::SOUND_RANDOM_ANVIL_USE);
+                    $player->getLevel()->addSound(new ClickSound($player->getLocation()),array($player));
                     break;
                 case 2:
                     $player->getLevel()->addSound(new AnvilUseSound($player->getLocation()),array($player));
@@ -283,7 +287,7 @@ class GameState
         }
     }
 
-    public function updataSign()
+    public function updateSign()
     {
         $location = $this->roomBase->getSignLocation();
         $sign = Server::getInstance()->getLevelByName($this->roomBase->getSignLevel())->getTile($location);
@@ -322,10 +326,10 @@ class GameState
     public function addFloatingText(Player $player){
         $pos = $this->roomBase->getWaitPlace();
         $v3 = new Vector3($pos->getX(),$pos->getY()+3.9,$pos->getZ());
-        $text = SHotPotato::$DEFAULT_TITLE."\n
-        §b玩法简介：游戏开始时，有随机一个玩家得到烫手的山芋\n
-        §6山芋玩家一定在规定时间内必须点击其他玩家，将山芋丢出\n
-        §d时间过后手持山芋的玩家将会BOOM\n
+        $text = SHotPotato::$DEFAULT_TITLE." \n
+        §b玩法简介：游戏开始时，有随机一个玩家得到烫手的山芋 \n
+        §6山芋玩家一定在规定时间内必须点击其他玩家，将山芋丢出 \n
+        §d时间过后手持山芋的玩家将会BOOM \n
         §f当然普通玩家也必须要避开山芋玩家哦！";
         $particle = new FloatingTextParticle($v3,"",$text);
         $player->getLevel()->addParticle($particle,array($player));

@@ -8,6 +8,7 @@
 
 namespace net\mcpes\summit\yui;
 
+use net\mcpes\summit\yui\entity\FireWork;
 use net\mcpes\summit\yui\entity\Lightning;
 use net\mcpes\summit\yui\gameConfig\ConfigBase;
 use net\mcpes\summit\yui\listen\PlayerListen;
@@ -91,6 +92,7 @@ class SHotPotato extends PluginBase
         self::$dataManager = new DataManager();
         self::$dataFolder = $this->getDataFolder();
         Entity::registerEntity(Lightning::class);
+        Entity::registerEntity(FireWork::class);
         $this->getServer()->getLogger()->info(self::$DEFAULT_TITLE . "§6成功加载！");
     }
 
